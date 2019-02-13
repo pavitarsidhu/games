@@ -1,60 +1,43 @@
 import Player;
+import BoardMap;
 import java.util.*;
 import java.io.*;
 
 public class Board {
-  private Player playerOne;
-  private Player playerTwo;
-  private Player currentPlayer;
 
   private int max = 30;
+  private BoardMap boardMap;
 
-  private int[30] boardMap = new int[]{0,0,0,0,0,-3,3,-5,4,0,0, 3, 4, -5, -4, 0,0,0,0,0,0,0,0,0,-4,4,0,0}
-
-
-  public void setPlayerOne(Player player) {
-    this.playerOne = player;
+  public void Board(boardMap) {
+    this.boardMap = boardMap;
   }
 
-  public void setPlayerTwo(Player player) {
-    this.playerTwo = player;
-  }
-
-  private boolean computeMove(int diceRoll) {
-    int currentLocation = this.currentPlayer.getCurrentLocation();
+  public boolean computeMove(int diceRoll, Player player) {
+    int currentLocation = player.getCurrentLocation();
     if (currentLocation + diceRoll > this.max) {
       int overMax = currentLocation + diceRoll - this.max;
-      this.currentPlayer.setCurrentLocation(overMax);
+      player.setCurrentLocation(overMax);
     } else {
-      this.currentPlayer.setCurrentLocation(currentLocation + diceRoll)
+      player.setCurrentLocation(currentLocation + diceRoll)
     }
 
-    currentLocation = this.currentPlayer.getCurrentLocation();
+    currentLocation = player.getCurrentLocation();
 
     // Check if on a snake or ladder
-    if (this.boardMap[currentLocation -1]) {
-      this.currentPlayer.setCurrentLocation(currentLocation + this.boardMap[currentLocation -1]);
-      currentLocation = this.currentPlayer.getCurrentLocation();
+    if (this.boardMap.getMap()[currentLocation -1]) {
+      player.setCurrentLocation(currentLocation + this.boardMap.getMap()[currentLocation -1]);
+      currentLocation = player.getCurrentLocation();
     }
-    if (checkWin(currentLocation)) {
+    if (checkWinCondition(player)) {
       return true;
     }
 
-    this.setNextPlayer();
     return false;
   }
 
-  private void setNextPlayer() {
-    if (this.currentPlayer == this.playerOne) {
-      this.currentPlayer = this.playerTwo;
-    } else {
-      this.currentPlayer = this.playerOne;
-    }
-  }
-
-  private boolean checkWinCondition() {
-    if (this.currentPlayer.getCurrentLocation() == 24) {
-      return true;
+  private boolean checkWinCondition(Player player) {
+    if (player.getCurrentLocation() == 24) {
+      return true
     }
     return false;
   }

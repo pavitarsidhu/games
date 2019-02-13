@@ -3,23 +3,31 @@ public class Game {
   private Dice die;
   private Board board;
   private Player playerOne;
-  private Playe playerTwo;
+  private Player playerTwo;
+  private Player currentPlayer;
 
   public void Game (Dice die, Board board, Player playerOne, Player playerTwo) {
     this.die = die;
     this.board = board;
     this.playerOne = playerOne;
     this.playerTwo = playerTwo;
+  }
 
-    this.board.setPlayerOne(this.playerOne);
-    this.board.setPlayerTwo(this.playerTwo);
+  private void setNextPlayer() {
+    if (this.currentPlayer == this.playerOne) {
+      this.currentPlayer = this.playerTwo;
+    } else {
+      this.currentPlayer = this.playerOne;
+    }
   }
 
   public void startGame() {
     while (true) {
-      if (this.board.computeMove()) {
+      if (this.board.computeMove(this.die.getDiceRoll(), this.currentPlayer)) {
         break;
       }
+      this.setNextPlayer();
     }
   }
+
 }
